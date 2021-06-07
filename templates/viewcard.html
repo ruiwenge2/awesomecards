@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Happy+Monkey" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Gloria+Halmarcuslelujah|Permanent+Marker|Special+Elite" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Dancing+Script|Fredericka+the+Great|Great+Vibes|Homemade+Apple|Indie+Flower|Kaushan+Script|Laila|Lora|Shadows+Into+Light" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lobster|Lobster+Two|Luckiest+Guy|Nova+Script|Poiret+One|Sacramento|Tangerine" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Nosifer" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Yellowtail" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Lobster+Two" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Dancing+Script" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Rubik&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet">
+		<link rel="icon" href="/static/images/card.jpeg">
+    <link href="/static/editor.css" rel="stylesheet">
+	
+    <title>Card</title>
+	</head>
+	
+  <style>
+    #card {
+      left: 13vw;
+      top:5vw;
+    }
+  </style>
+	<body>
+	    <section id='cardcreator'>
+	            <div id='card'></div>
+	            <div class="context-menu" style="display:none"></div>
+	            
+	    </section>
+	    
+	    <script src="/static/modal.js"></script>
+    	<script src="/static/contextmenu.js"></script>
+		<script>
+		var card = document.querySelector('#card');
+		var dx, dy, activeDiv;
+			
+			function colorFunction() {
+				var color = document.querySelector("#addColor").value;
+				document.querySelector("#card").style.backgroundImage = 'None';
+				document.querySelector("#card").style.backgroundColor = color;
+			}
+			function applybgtype() {
+				var bgtype = document.getElementById("bgtype").value;
+				if(bgtype === "Transparent"){ activeDiv.style.background = "transparent"; document.getElementById("choosebgcolor").style.display = "none"; }
+				else{ document.getElementById("choosebgcolor").style.display = "block";}
+			}
+		function addStickerImage() {
+			var newImage = document.createElement('div');
+			var imageUrl = document.getElementById("stickerurl").value;
+			document.getElementById("stickerurl").value = '';
+			var card = document.querySelector('#card');
+	        newImage.style.backgroundImage = `url(${imageUrl})`;
+	        newImage.classList.add('imageSettings');
+	        newImage.draggable = true;
+	
+	     // Mouse control, remove with right-click
+	        addStickerEvents(newImage);
+	        card.appendChild(newImage);
+		}
+		function setTextAlign() {
+			activeDiv.style.textAlign = document.getElementById("textAlign").value;
+		}
+		
+		function loadTemplateBtns(templates, parentdiv, classname) {
+		    templates.forEach(function (t) {
+		         // t.imgurl, t.link 
+		        var imgBtn = new Image();
+		        imgBtn.classList.add(classname);
+		        imgBtn.addEventListener('click', function(){
+		            window.open(t.link, '_blank')
+		        });
+		        imgBtn.src = t.imgurl;
+		        parentdiv.appendChild(imgBtn);
+		    });
+		}
+		
+		var dx,dy;
+		function markOrigin(e) {
+		    dx = this.offsetLeft - e.clientX;
+		    dy = this.offsetTop - e.clientY;
+		}
+		
+		function preview() {
+		    var url= location.origin + location.pathname + '?contents=' 
+		        + encodeURIComponent(card.outerHTML) + '&mode=preview';
+			window.open(url, '_blank')
+		}
+		
+		function saveCard() { 
+		    var url = location.origin + location.pathname + '?contents=' 
+		        + encodeURIComponent(card.outerHTML) + '&mode=edit';
+		    promptmodal('Save Card', 'Type a name to save the card:', ok = 'Save', focus = true);
+		    okbtn.onclick = function(){
+		    	localStorage[value] = url;
+		    	localStorage['#CardMaker_'+ value.replace(' ','')] = url;
+			}
+		}
+		
+		function updateEventListeners(){
+		    var textboxes = document.querySelectorAll('.textbox');
+		    for (var i=0; i < textboxes.length; i++) {
+		        addTextBoxEvents(textboxes[i]);
+		    }
+		    
+		    var stickers = document.querySelectorAll('.imageSettings');
+		    for (var j=0; j < stickers.length; j++) {
+		        addStickerEvents(stickers[j]);
+		    }
+		}
+		
+		function loadVars() {
+		    card = document.querySelector('#card');
+		}
+		
+    function decodeHTML(html){
+      var txt = document.createElement('textarea');
+      txt.innerHTML = html;
+      return txt.value;
+    }
+
+		function loadCard() {
+		    document.querySelector('#cardcreator').style.display = 'block';
+        card.outerHTML = decodeHTML(`{{contents}}`);
+        loadVars();
+        card.style.resize = 'none';
+        removeOutlines();
+		}
+		function removeOutlines() {
+		    var textboxes = document.querySelectorAll('.textbox');
+		    for (var i=0; i < textboxes.length; i++) {
+		        textboxes[i].contentEditable = false;
+		        textboxes[i].draggable = false;
+		        textboxes[i].style.border = 'none';
+		        textboxes[i].style.resize = 'none';
+		    }
+			var imageSettings = document.querySelectorAll('.imageSettings');
+		    for (var i=0; i < imageSettings.length; i++) {
+		        imageSettings[i].draggable = false;
+		        imageSettings[i].style.border = 'none';
+		        imageSettings[i].style.resize = 'none';
+		    }
+		}
+		
+		function loadStickers(urls, div) {
+		    for (var i=0; i<urls.length; i++) {
+		        var imgtag = new Image();
+		        imgtag.src = urls[i];
+		        imgtag.classList.add('imgbtn');
+		        imgtag.addEventListener('click', function() {
+		           
+		            var newImage = document.createElement('div');
+		            newImage.classList.add('imageSettings');
+		            newImage.style.backgroundImage = `url(${this.src})`;
+		            newImage.draggable = true;
+		            card.appendChild(newImage);
+		            addStickerEvents(newImage);
+		        });
+		        div.appendChild(imgtag);
+		    }
+		}
+		
+		
+		function moveStuff(e) {
+		    this.style.left = String(dx + e.clientX) + 'px';
+		    this.style.top = String(dy + e.clientY) + 'px';
+		}
+		
+		function removeStuff(obj) {
+		    if(card.contains(obj)) card.removeChild(obj);
+		}
+		
+		function addTextBox() {
+		    var div = document.createElement('div');
+		    div.classList.add('textbox');
+		    div.contentEditable = true;
+		    div.draggable = true;
+		    
+		    addTextBoxEvents(div);
+		    
+		    card.appendChild(div);
+		}
+		
+		function loadBGImages(urls, div) {
+		    for (var i=0; i<urls.length; i++) {
+		        var imgtag = new Image();
+		        imgtag.src = urls[i];
+		        imgtag.classList.add('imgbtn');
+		        imgtag.addEventListener('click', function() {
+		            card.style.backgroundImage = `url('${this.src}')`;
+		        });
+		        div.appendChild(imgtag);
+		    }
+		}
+		
+		
+		function resetbtn() {
+			card.style.backgroundImage= "url(none)";
+			card.style.backgroundColor= "white";
+		}
+		   
+		 //addEventListeners for toolbar
+		// Main
+		
+		loadCard();
+		</script>
+	</body>
+</html>

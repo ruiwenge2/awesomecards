@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Happy+Monkey" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Gloria+Hallelujah|Permanent+Marker|Special+Elite" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Abril+Fatface|Dancing+Script|Fredericka+the+Great|Great+Vibes|Homemade+Apple|Indie+Flower|Kaushan+Script|Laila|Lora|Shadows+Into+Light" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Gochi+Hand|Lobster|Lobster+Two|Luckiest+Guy|Nova+Script|Poiret+One|Sacramento|Tangerine" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Nosifer" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css?family=Yellowtail" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Lobster+Two" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Dancing+Script" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+       <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Rubik&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Lato&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Shojumaru&display=swap" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css2?family=Oxygen&display=swap" rel="stylesheet">
+		<link rel="icon" href="/static/images/card.jpeg">
+    <link href="/static/editor.css" rel="stylesheet">
+	
+    <title>{{cardname}}</title>
+    <style>
+      [contenteditable] {
+        -webkit-user-select: text;
+        user-select: text;
+      }
+    </style>
+	</head>
+	
+	<body>
+	    <h1 id="thetitle">{{cardname}}</h1>
+	    <section id='cardcreator'>
+	            <div id='card'></div>
+	            <div class="context-menu" style="display:none">
+	            	<br><ul> 
+			            <li onclick="addTextBox()">Add Textbox</li> 
+			            <li onclick="saveCard()">Save Changes</li>
+			            <li onclick="shareCard()">Share Card</li>
+			        </ul><br>
+			    </div>
+	            <div id='toolbar'>
+                <button id='save'>Save Changes</button>
+	            <button class="collapsible">Settings</button>
+	            <div id="settings" class="hidden">
+	            	<h3>Resize Card</h3>
+	            	<p>To resize the card, hold and the two lines on the right bottom corner of the card.</p>
+	            	<button onclick="document.querySelector('#card').style.height = '80vh'; document.querySelector('#card').style.width = '70vw';">Reset Size</button>
+	            	<br>
+	            	<h3>Border</h3>
+	            	<label>Border Color: </label>
+	            	<input type="color" oninput="card.style.borderColor = this.value;" id="bordercolor">
+	            	<br><br>
+	            	<label>Border Width: </label>
+	            	<input type="number" oninput="card.style.borderWidth = this.value + 'px';" id="borderwidth" value="2">
+	            	<br><br>
+	            	<label>Border Type: </label>
+	            	<select onchange="card.style.border = document.querySelector('#borderwidth').value + 'px ' + this.value + ' ' + document.querySelector('#bordercolor').value;">
+	            		<option>Solid</option>
+	            		<option>Ridge</option>
+	            		<option>Dotted</option>
+	            		<option>Double</option>
+	            		<option>Dashed</option>
+	            		<option>Groove</option>
+	            		<option>Inset</option>
+	            		<option>Outset</option>
+	            		<option>None</option>
+	            	</select>
+	            	<button onclick="card.style.border = '2px solid black';">Reset Border</button>
+	            </div>
+                <button class='collapsible'>Background</button>
+                <div  id= 'bgimages' class='hidden'>
+                	
+	            	<label>Background Image</label>  <br><input type='text' placeholder='Paste URL of image' id="addBgImageInput">   	<button id ='add'>Add</button>
+                <br><input type="file" id="uploadbgimage" style="display:none" onchange="uploadBgImage()" accept="image/*"><button onclick="document.querySelector('#uploadbgimage').click()">Upload</button>
+	            	<br>
+	            	<label>Background Color</label> <br><input type="color" id="addColor">
+	            	<button id="addColor2Bg" onclick="colorFunction()">Add</button>
+	                <div id='bgimagepicker'>
+	                    <p>Click on the image to set it as the background.</p>
+	                </div>
+                </div>
+                <button class='collapsible'>Text Box</button>
+                <div class='hidden'>
+                		<p> To delete the textbox, click on command + backspace or control + backspace. To resize it, hold and drag the two lines on the right bottom corner of the textbox. To move it, click, hold, and drag.</p>
+                
+                    <button id= 'addtextbox'>Add Text Box</button>
+                    <p>Change Font</p>
+                    <select id='fontfamily'>
+                    	<option>Roboto</option>
+                    	<option>Arial</option>
+                    	<option>Georgia</option>
+                    	<option>Helvetica</option>
+                    	<option>Comfortaa</option>
+                    	<option>Montserrat</option>
+                    	<option>Rubik</option>
+                    	<option>Lato</option>
+                    	<option>Serif</option>
+                    	<option>Sans-serif</option>
+                    	<option>Oxygen</option>
+                    	<option>Times</option>
+                    	<option>Monospace</option>
+                    	<option>Shojumaru</option>
+                    	<option>Verdana</option>
+                    	<option>Courier</option>
+                    	<option>Lucida</option>
+                    	<option>Impact</option>
+                        <option>Happy Monkey</option>
+                        <option>Indie Flower</option>
+                        <option>Fredericka the Great</option>
+                        <option>Homemade Apple</option>
+                        <option>Dancing Script</option>
+                        <option>Shadows Into Light</option>
+                        <option>Abril Fatface</option>
+                        <option>Kaushan Script</option>
+                        <option>Great Vibes</option>
+                        <option>Gloria Hallelujah</option>
+                        <option>Permanent Marker</option>
+                        <option>Special Elite</option>
+                        <option>Luckiest Guy</option>
+                        <option>Tangerine</option>
+                        <option>Lobster Two</option>
+                        <option>Gochi Hand</option>
+                        <option>Lobster</option>
+                        <option>Sacramento</option>
+                        <option>Poiret One</option>
+                        <option>Nova Script</option>
+                        <option>Yellowtail</option>
+                        </select>
+                        <br>
+                    <div id='textcolorpicker'>
+							<p>Change Text Color </p>
+							<input id='textcolor' type="color">
+							<button id='textcolorchange'>Apply</button>
+						</div>
+						<br>
+						<div id='textsizepicker'>
+							<p>Change Text Size</p>
+							<input id='textsize' type="number" value="16">
+							<button id='textsizechange'>Apply</button>
+						</div>
+						<br>
+						<div>
+						<label>Text Align:</label>
+						<select id="textAlign" onchange="setTextAlign()">
+							<option>Left</option>
+							<option>Right</option>
+							<option selected>Center</option>
+							<option>Justify</option>
+						</select>
+						</div>
+						<br>
+						<label>Background:</label>
+						<select id="bgtype" onchange="applybgtype()">
+							<option>Transparent</option>
+							<option>Color</option>
+						</select>
+						<div id="choosebgcolor" style="display:none">
+						<input id="textbgcolor" type="color">
+						<button onclick="activeDiv.style.background = document.getElementById('textbgcolor').value;">Apply</button>
+                    </div>
+						</div>
+                    
+                    <button id='stickers' class='collapsible'>Stickers</button>
+                	<div id='stickerpicker' class='hidden'>
+                		<label>Sticker Image</label>  <br><input type='text' placeholder='Paste URL of image' id="stickerurl">   	<button onclick="addStickerImage()">Add</button><br><input type="file" id="uploadsticker" style="display:none" onchange="uploadSticker()" accept="image/*"><button onclick="document.querySelector('#uploadsticker').click()">Upload</button>
+                	    <p>To delete the sticker, double click. To resize it, find the two lines at the right corner of the sticker. To move it, click and hold the box, then drag.</p>
+                	</div>
+                	
+                	<button id='share'>Share</button>
+                  <p>To share the card to someone, click on share, copy the link of the page that opens, and send the link to that person!</p>
+                </div>
+	    </section>
+	    
+	    <script src="/static/modal.js"></script>
+    	<script src="/static/contextmenu.js"></script>
+		<script>
+		var card = document.querySelector('#card');
+		var dx, dy, activeDiv;
+		var bgImgURLs = [
+		    "https://media0.giphy.com/media/8Pvp9okT4Qaf5k5IRC/source.gif",
+		    "https://www.reedpublicrelations.com/wp-content/uploads/2019/11/Reed-blog-post-image.jpg",
+		    "https://static.toiimg.com/thumb/72975551.cms?width=680&height=512&imgsize=881753",
+		    "https://media4.giphy.com/media/3ohhwmQ0xIg8W3pHd6/200w_d.gif",
+		    "https://cdn.quotesgram.com/img/79/71/1834020779-blah.gif",
+		    "https://www.clipartkey.com/mpngs/m/7-79874_christmas-clipart-christmas-time-merry-christmas-merry-christmas.png",
+		    "https://images-na.ssl-images-amazon.com/images/I/61b5ZxDWUkL._AC_SL1500_.jpg",
+		    "https://i0.wp.com/www.wordzz.com/wp-content/uploads/2018/12/Happy-New-Year-Colorful.gif?resize=587%2C263&ssl=1",
+		    "https://cdn.wallpapersafari.com/91/86/v2agjJ.jpg",
+		    "https://media3.giphy.com/media/3o7TKDkDbIDJieKbVm/giphy.gif?w=144",
+		    "https://www.nicepng.com/png/detail/115-1158212_black-cartoon-piano-element-design-cartoon-piano-png.png",
+		    "https://www.portland-michigan.org/ImageRepository/Document?documentID=1601",
+		    "https://www.boostersinc.net/wp-content/uploads/2016/11/S-125-4.png",
+		    "https://media1.giphy.com/media/xT9IgGwdqmRdd8xPaM/source.gif",
+		    "https://cdn.getyourguide.com/img/location/5cab4b111822f.jpeg/148.jpg",
+		    "https://planestrainsandtreadmills.com/wp-content/uploads/2018/04/4485_Lake-Tahoe-Summer-Emerald-Bay.jpg",
+		    "https://www.purevacations.com/wp-content/uploads/2019/10/Tropical-beach-in-Punta-Cana-Dominican-Republi-1024x683.jpg",
+		    "https://maltawinds.com/wp-content/uploads/2020/10/aviation.png",
+		    "https://www.planetware.com/wpimages/2019/01/world-snorkeling-australia-queensland-great-barrier-reef.jpg",
+		    "https://i.pinimg.com/600x315/98/7f/6e/987f6edc0773cc8074dfcd316ef7f6c4.jpg"
+		    ];
+		var stickerURLs = [
+			"https://pa1.narvii.com/6688/9bb1fd33d8902a74ac4848212979871cd76af8f9_hq.gif",
+			"https://media2.giphy.com/media/mBRvgvWrHILZjeOAVv/200w.webp?cid=ecf05e47t34yx5zgja51qsebmqjgpwujfizjoohy3owqh1uo&rid=200w.webp",
+			"https://i.pinimg.com/originals/7e/92/99/7e929930d97ae5434c58dbcf4439f986.gif",
+			"https://i.pinimg.com/originals/38/e7/4c/38e74c805231c5e2da127a7f00ce7ace.png",
+			"https://upload.wikimedia.org/wikipedia/en/thumb/3/3b/SpongeBob_SquarePants_character.svg/1200px-SpongeBob_SquarePants_character.svg.png",
+			"https://bestanimations.com/Text/Cool/cool-66.gif",
+			"https://upload.wikimedia.org/wikipedia/en/thumb/3/33/Patrick_Star.svg/1200px-Patrick_Star.svg.png",
+			"https://i.pinimg.com/originals/1a/30/99/1a30995fac9b8d460503c08d0f7bc951.png",
+			"https://media2.giphy.com/media/WNzcy7x4WSeAYPetkZ/source.gif",
+			"https://images.squarespace-cdn.com/content/5850c0a1f7e0abf08b57625c/1489109325665-AJDZ5IXUU849CKFEVYEP/letsgo.png?content-type=image%2Fpng",
+			"https://media3.giphy.com/media/3o72FfGORpzRczqz7y/source.gif",
+			"https://media1.giphy.com/media/ReUlD1YS8Af0Evy57f/giphy.gif?cid=ecf05e47xt6932q0nch2bok8sch7n7py8k4sdy3sq5pnuy1n&rid=giphy.gif",
+			"https://media3.giphy.com/media/ZeL13JHhvfvcKcbtb3/giphy.gif?cid=ecf05e47pe8cr7au6a5tr3mldjy71gxlo1c9yinmj1aaf077&rid=giphy.gif",
+			"https://media2.giphy.com/media/Lx4PBgxwaCrxUD5Shn/giphy.gif?cid=ecf05e47wkceiq27qeshquk4utd6e2d4y4i6cgvb96oiovqz&rid=giphy.gif",
+			"https://media0.giphy.com/media/jVGvArgkV2F41igHeE/giphy.gif?cid=ecf05e47rlkbm7lzkk3bccgd6x240yagjxatkzsdi77jj079&rid=giphy.gif",
+			"https://media1.giphy.com/media/USUIWSteF8DJoc5Snd/200w.webp?cid=ecf05e470jhhyqzyeh8xqqty0k7dnbmwu7y0hwja53nnrqze&rid=200w.webp",
+			"https://media2.giphy.com/media/ZdNlmHHr7czumQPvNE/200w.webp?cid=ecf05e470jhhyqzyeh8xqqty0k7dnbmwu7y0hwja53nnrqze&rid=200w.webp",
+			"https://media3.giphy.com/media/SXBmt6EgkCZjHVfbsU/giphy.gif?cid=ecf05e477zjwklxl8cdo5mqt3cpe9pp22hsypjoy3d0k4ozr&rid=giphy.gif",
+			"https://media1.giphy.com/media/IcPtije3iwoEM/giphy.gif?cid=ecf05e47e6nulph8kwybkgeadktawfgw6ow1n8m11y1lzzzd&rid=giphy.gif",
+			"https://media4.giphy.com/media/WUJ7M1eBsGeEZRyyHj/giphy.gif?cid=ecf05e472db50jny4qdwpmgi319a6u58za87suynv5k3w8oz&rid=giphy.gif"
+			];
+			
+      document.addEventListener("keydown", e => {
+        if(e.key === "s" && (e.metaKey || e.ctrlKey)){
+          e.preventDefault();
+          saveCard();
+        }
+      });
+      
+			document.querySelector('#add').addEventListener('click', addToBackground);
+      function addToBackground(){
+        const imageurl = document.querySelector('#addBgImageInput').value;	
+        const card = document.querySelector('#card');
+        card.style.backgroundImage = 'url(' + imageurl + ')';
+        document.querySelector("#card").style.backgroundColor = 'none';	document.querySelector('#addBgImageInput').value = '';
+      }
+
+      function uploadBgImage(){
+        const input = document.querySelector('#uploadbgimage');
+        const fd = new FormData();
+        fd.append("image", input.files[0]);
+        fetch('https://image-uploader.ruiwenge2.repl.co/upload', {
+        method: 'POST',
+        body: fd
+        }).then(response => response.text()).then(imageurl => {
+          document.querySelector('#addBgImageInput').value = imageurl;
+          addToBackground();
+        }).catch(err => console.log(err));
+      }
+
+      function uploadSticker(){
+        const input = document.querySelector('#uploadsticker');
+        const fd = new FormData();
+        fd.append("image", input.files[0]);
+        fetch('https://image-uploader.ruiwenge2.repl.co/upload', {
+        method: 'POST',
+        body: fd
+        }).then(response => response.text()).then(imageurl => {
+          document.getElementById("stickerurl").value = imageurl;
+          addStickerImage();
+        }).catch(err => console.log(err));
+      }
+			
+			function colorFunction() {
+				var color = document.querySelector("#addColor").value;
+				document.querySelector("#card").style.backgroundImage = 'None';
+				document.querySelector("#card").style.backgroundColor = color;
+			}
+			function applybgtype() {
+				var bgtype = document.getElementById("bgtype").value;
+				if(bgtype === "Transparent"){ activeDiv.style.background = "transparent"; document.getElementById("choosebgcolor").style.display = "none"; }
+				else{ document.getElementById("choosebgcolor").style.display = "block";}
+			}
+		function addStickerImage() {
+			var newImage = document.createElement('div');
+			var imageUrl = document.getElementById("stickerurl").value;
+			document.getElementById("stickerurl").value = '';
+			var card = document.querySelector('#card');
+	        newImage.style.backgroundImage = `url(${imageUrl})`;
+	        newImage.classList.add('imageSettings');
+	        newImage.draggable = true;
+	
+	     // Mouse control, remove with right-click
+	        addStickerEvents(newImage);
+	        card.appendChild(newImage);
+		}
+		function setTextAlign() {
+			activeDiv.style.textAlign = document.getElementById("textAlign").value;
+		}
+		
+		function loadTemplateBtns(templates, parentdiv, classname) {
+		    templates.forEach(function (t) {
+		         // t.imgurl, t.link 
+		        var imgBtn = new Image();
+		        imgBtn.classList.add(classname);
+		        imgBtn.addEventListener('click', function(){
+		            window.open(t.link, '_blank')
+		        });
+		        imgBtn.src = t.imgurl;
+		        parentdiv.appendChild(imgBtn);
+		    });
+		}
+		
+		var dx,dy;
+		function markOrigin(e) {
+		    dx = this.offsetLeft - e.clientX;
+		    dy = this.offsetTop - e.clientY;
+		}
+		
+		function addStickerEvents(sticker) {
+		    sticker.addEventListener('dragstart', markOrigin);
+		    sticker.addEventListener('dragend', moveStuff);
+		    sticker.addEventListener('dblclick', function(e) {
+		        e.preventDefault();
+		        removeStuff(this);
+		    });
+		}
+		
+		function addTextBoxEvents(div){
+		
+		    div.addEventListener('dragstart', markOrigin);
+		    div.addEventListener('dragend', moveStuff);
+		    div.addEventListener('keydown', function(e) {
+		        
+		        if (e.key === 'Backspace' && (e.metaKey || e.ctrlKey)) { 
+		            removeStuff(this);
+		        }
+		        
+		    });
+		    
+		    div.addEventListener('focus', function() {
+		       activeDiv = this; 
+		       document.getElementById("fontfamily").value = activeDiv.style.fontFamily;
+		       document.getElementById("textcolor").value = activeDiv.style.color;
+		       document.getElementById("textsize").value = parseInt(activeDiv.style.fontSize);
+		       var align = activeDiv.style.textAlign;
+		       align = align[0].toUpperCase() + align.slice(1)
+		       document.getElementById("textAlign").value = align;
+		       if(activeDiv.style.background === "transparent") {
+		    		document.getElementById("choosebgcolor").style.display = "none";
+		    		document.getElementById("bgtype").value = "Transparent";
+		       }else {
+		       	document.getElementById("choosebgcolor").style.display = "block";
+		       	document.getElementById("textbgcolor").value = activeDiv.style.background;
+		       	document.getElementById("bgtype").value = "Color";
+		       }
+		    });
+		
+		}
+		
+		function preview() {
+		    var url= location.origin + location.pathname + '?contents=' 
+		        + encodeURIComponent(card.outerHTML) + '&mode=preview';
+			window.open(url, '_blank')
+		}
+		
+		function saveCard() {
+      fetch("save", {
+        method:"POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body:JSON.stringify({
+          contents:card.outerHTML
+        })
+      }).then(r => r.text()).then(console.log);
+		}
+		
+		function updateEventListeners(){
+		    var textboxes = document.querySelectorAll('.textbox');
+		    for (var i=0; i < textboxes.length; i++) {
+		        addTextBoxEvents(textboxes[i]);
+		    }
+		    
+		    var stickers = document.querySelectorAll('.imageSettings');
+		    for (var j=0; j < stickers.length; j++) {
+		        addStickerEvents(stickers[j]);
+		    }
+		}
+		
+		function loadVars() {
+		    card = document.querySelector('#card');
+		}
+
+    function decodeHTML(html){
+      var txt = document.createElement('textarea');
+      txt.innerHTML = html;
+      return txt.value;
+    }
+		
+		function loadCard() {
+		    document.querySelector('#cardcreator').style.display = 'block';
+        card.outerHTML = decodeHTML(`{{contents}}`);
+        loadVars();
+        updateEventListeners();
+		}
+		function removeOutlines() {
+		    var textboxes = document.querySelectorAll('.textbox');
+		    for (var i=0; i < textboxes.length; i++) {
+		        textboxes[i].contentEditable = false;
+		        textboxes[i].draggable = false;
+		        textboxes[i].style.border = 'none';
+		        textboxes[i].style.resize = 'none';
+		    }
+			var imageSettings = document.querySelectorAll('.imageSettings');
+		    for (var i=0; i < imageSettings.length; i++) {
+		        imageSettings[i].draggable = false;
+		        imageSettings[i].style.border = 'none';
+		        imageSettings[i].style.resize = 'none';
+		    }
+		}
+		
+		function loadStickers(urls, div) {
+		    for (var i=0; i<urls.length; i++) {
+		        var imgtag = new Image();
+		        imgtag.src = urls[i];
+		        imgtag.classList.add('imgbtn');
+		        imgtag.addEventListener('click', function() {
+		           
+		            var newImage = document.createElement('div');
+		            newImage.classList.add('imageSettings');
+		            newImage.style.backgroundImage = `url(${this.src})`;
+		            newImage.draggable = true;
+		            card.appendChild(newImage);
+		            addStickerEvents(newImage);
+		        });
+		        div.appendChild(imgtag);
+		    }
+		}
+		
+		
+		function moveStuff(e) {
+		    this.style.left = String(dx + e.clientX) + 'px';
+		    this.style.top = String(dy + e.clientY) + 'px';
+		}
+		
+		function removeStuff(obj) {
+		    if(card.contains(obj)) card.removeChild(obj);
+		}
+		
+		function addTextBox() {
+		    var div = document.createElement('div');
+		    div.classList.add('textbox');
+		    div.contentEditable = true;
+		    div.draggable = true;
+		    
+		    addTextBoxEvents(div);
+		    
+		    card.appendChild(div);
+		}
+		
+		function loadBGImages(urls, div) {
+		    for (var i=0; i<urls.length; i++) {
+		        var imgtag = new Image();
+		        imgtag.src = urls[i];
+		        imgtag.classList.add('imgbtn');
+		        imgtag.addEventListener('click', function() {
+		            card.style.backgroundImage = `url('${this.src}')`;
+		        });
+		        div.appendChild(imgtag);
+		    }
+		}
+		
+		
+		function resetbtn() {
+			card.style.backgroundImage= "url(none)";
+			card.style.backgroundColor= "white";
+		}
+		
+		
+		function loadToolBar() {
+		    loadBGImages(bgImgURLs, document.querySelector('#bgimagepicker'));
+		    loadStickers(stickerURLs, document.querySelector('#stickerpicker'));
+		    
+		    // Make tool buttons collapsible
+		    var btns = document.querySelectorAll('.collapsible');
+		    for(var i=0; i<btns.length; i++) {
+		        var btn = btns[i];
+		        btn.addEventListener('click', function() {
+		            this.classList.toggle('active');
+		            if (this.classList.contains('active')) {
+		                this.nextElementSibling.style.display = 'block';
+		            } else {
+		                this.nextElementSibling.style.display = 'none';
+		            }
+		        });
+		    }
+		}
+		
+		function shareCard () {
+      saveCard();
+      setTimeout(() => {
+        window.open("view")
+      }, 250);
+		}
+		   
+		 //addEventListeners for toolbar
+		    document.querySelector('#addtextbox').addEventListener('click', addTextBox);
+		    document.querySelector('#stickers').addEventListener('click', loadStickers);
+		    document.querySelector('#save').addEventListener('click', saveCard);
+		    document.querySelector('#share').addEventListener('click', shareCard);
+		    document.querySelector('#fontfamily').addEventListener('change', function() {
+		        activeDiv.style.fontFamily = this.value;
+		    });
+		    document.querySelector('#textcolorchange').addEventListener('click', function() {
+		    	activeDiv.style.color = document.querySelector('#textcolor').value;
+		    });
+		    document.querySelector('#textsizechange').addEventListener('click', function() {
+		       activeDiv.style.fontSize = document.querySelector('#textsize').value + 'px';
+		    });
+		    document.querySelectorAll('.modalclose').forEach(function(x1) {
+		        x1.addEventListener('click', function() {
+		            x1.parentElement.style.display = 'none';
+		        });
+		    });
+		// Main
+		
+		loadCard();
+		loadToolBar();
+		</script>
+	</body>
+</html>

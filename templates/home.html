@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Home - AwesomeCards</title>
+    <link href="/static/style.css" rel="stylesheet">
+    <link href="/static/home.css" rel="stylesheet">
+    <link href="/static/images/card.jpeg" rel="icon">
+    <style>
+      .modal-content {
+        color:black;
+      }
+    </style>
+  </head>
+  <body>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/cards">My Cards</a>
+      <a href="/help">Help</a>
+      <a href="/logout">Logout</a>
+    </nav><br><br><br>
+    <h1>Welcome, {{username}}!</h1><br>
+    <h3>AwesomeCards allows you to create online cards for free. You can save them, and share them.</h3><br>
+    <button onclick="newcard()" class="btn">Create new card</button><br><br><br>
+    {% if recentlength > 0 %}
+    <div style="width:40%; border:2px solid white; margin-left:30%; margin-right:30%">
+      <h2>Recent Cards</h2>
+      {% for i in recent %}
+      <a href="/{{username}}/{{i}}/edit" target="_blank">{{i}}</a><br><br>
+      {% endfor %}<br>
+    </div><br><br>
+    {% endif %}
+    <a href="/cards">See all of my cards</a><br><br><br>
+    <a>Need some help? Go to the</a> <a href="/help">help page</a>.
+    <script>
+      var allcards = "{{cards}}";
+      allcards = allcards.split(" ");
+      function newcard(){
+        promptmodal("Create Card", "Enter the name of the card:", "Create", true);
+        okbtn.onclick = function(){
+          letters = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'];
+          cap_letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z'];
+          numbers = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9'];
+          allchars = letters.concat(cap_letters,  numbers, ["-", "_"]);
+          validName = true;
+          for(var i of value){
+            if(!allchars.includes(i)){
+              alertmodal("", "The name can only contain alphanumeric characters, dashes, and underscores.");
+              validName = false;
+            }
+          }
+          if(validName == true){
+            if(value.length <= 50){
+              if(!allcards.includes(value)){
+                if(value != ""){
+                  fetch("/createnewcard", {
+                    method:"POST",
+                    headers: {
+                      "Content-Type": "application/json"
+                    },
+                    body:JSON.stringify({
+                      user:"{{username}}",
+                      newcardname:value
+                    })
+                  });
+                  window.open(`/{{username}}/${value}/edit`);
+                  setTimeout(() => {
+                    location.reload();
+                  }, 500);
+                }
+              } else{
+                if(value == ""){
+                  newcard();
+                  return;
+                }
+                alertmodal("", "This card already exists.");
+              }
+            } else{
+              alertmodal("", "The name cannot have more than 50 characters.");
+            }
+          }
+        };
+      }
+    </script>
+    <script src="/static/modal.js"></script>
+  </body>
+</html>
